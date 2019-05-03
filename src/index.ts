@@ -5,6 +5,8 @@ import * as Query from "./resolvers/Query";
 import * as Mutation from "./resolvers/Mutation";
 import * as User from "./resolvers/User";
 import * as Link from "./resolvers/Link";
+import * as Subscription from "./resolvers/Subscription";
+import * as Vote from "./resolvers/Vote";
 //TODO: read graphql-yoga
 const { GraphQLServer } = require("graphql-yoga");
 
@@ -21,7 +23,9 @@ const resolvers = {
   Query,
   Mutation,
   User,
-  Link
+  Link,
+  Subscription,
+  Vote
 };
 
 const server = new GraphQLServer({

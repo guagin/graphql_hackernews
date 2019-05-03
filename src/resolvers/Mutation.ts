@@ -29,12 +29,6 @@ async function update(parent, { id, url, description }, { prisma }) {
   });
   log(`${JSON.stringify(link)}`);
   return link;
-  //   if (!link) {
-  //     throw new Error(`Link[${id}] not exists`);
-  //   }
-  //   link.url = url;
-  //   link.description = description;
-  //   return link;
 }
 
 async function deleteLink(parent, { id }, { prisma }) {
@@ -75,4 +69,19 @@ async function login(parent, { email, password }, { prisma }, info) {
   };
 }
 
-export { post, update, deleteLink, signUp, login };
+async function vote(parent, args, context, info) {
+  const userId = getUserId(context);
+  const linkExists = await context.prisma.$exists.vote({
+    user: { id: userId },
+    link: { id: args.linkId }
+  });
+  if (linkExists) {
+    throw new Error(`Already vote for link:${args.linkId}`);
+  }
+  return await context.prisma.createVote({
+    user: { connect: { id: userId } },
+    link: { connect: { id: args.linkId } }
+  });
+}
+
+export { post, update, deleteLink, signUp, login, vote };
