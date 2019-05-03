@@ -1,61 +1,36 @@
 import * as _ from "lodash";
 import * as makeDebug from "debug";
+import { prisma } from "./generated/prisma-client";
+
 const { GraphQLServer } = require("graphql-yoga");
 const log = makeDebug("server");
-
-const links = [
-  {
-    id: "link-0",
-    url: "www.howtographql.com",
-    description: "Fullstack tutorial for GraphQL"
-  }
-];
-
-let idCount = links.length;
 
 const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
-    feed: () => links,
-    get: (parent, { id }) => {
-      const link = _.find(links, link => {
-        return link.id === id;
-      });
-      if (!link) {
-        throw new Error(`Link[${id}] not exists`);
-      }
-      return link;
+    feed: (root, args, { prisma }, info) => prisma.links(),
+    get: (parent, { id }, { prisma }) => {
+      return prisma.link({ id });
     }
   },
   Mutation: {
-    post: (parent, { description, url }) => {
-      const link = {
-        id: `link-${idCount++}`,
+    post: (parent, { description, url }, { prisma }) => {
+      return prisma.createLink({
         description,
         url
-      };
-      links.push(link);
-      return link;
+      });
     },
     update: (parent, { id, url, description }) => {
-      const link = _.find(links, link => {
-        return link.id === id;
-      });
-      if (!link) {
-        throw new Error(`Link[${id}] not exists`);
-      }
-
-      link.url = url;
-      link.description = description;
-
-      return link;
+      //   if (!link) {
+      //     throw new Error(`Link[${id}] not exists`);
+      //   }
+      //   link.url = url;
+      //   link.description = description;
+      //   return link;
     },
     delete: (parent, { id }) => {
-      const removed = _.remove(links, link => {
-        return link.id === id;
-      });
-      log(`removed: ${JSON.stringify(removed)}`);
-      return removed.length > 0;
+      //   log(`removed: ${JSON.stringify(removed)}`);
+      //   return removed.length > 0;
     }
   },
   Link: {
@@ -67,7 +42,8 @@ const resolvers = {
 
 const server = new GraphQLServer({
   typeDefs: "./src/schema.graphql",
-  resolvers
+  resolvers,
+  context: { prisma }
 });
 
 server.start(() => console.log(`Server is running on http://localhost:4000`));

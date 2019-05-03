@@ -6,7 +6,8 @@
   "dependencies": {
     "debug": "^4.1.1",
     "graphql-yoga": "^1.17.4",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "prisma-client-lib": "^1.32.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.123",
