@@ -1,3 +1,5 @@
+import { getUserId } from "../utils";
+
 function info() {
   `This is the API of a Hackernews Clone`;
 }
@@ -10,4 +12,9 @@ function get(parent, { id }, { prisma }) {
   return prisma.link({ id });
 }
 
-export { info, feed, get };
+function getUser(parent, args, context) {
+  const userId = getUserId(context);
+  return context.prisma.user({ id: userId });
+}
+
+export { info, feed, get, getUser };
