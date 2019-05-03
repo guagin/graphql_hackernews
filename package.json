@@ -4,8 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "debug": "^4.1.1",
     "graphql-yoga": "^1.17.4",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "prisma-client-lib": "^1.32.0"
   },
@@ -17,6 +19,6 @@
     "typescript": "^3.4.5"
   },
   "scripts": {
-    "start": "cross-env DEBUG=server ts-node-dev src/index.ts"
+    "start": "cross-env DEBUG=server:* ts-node-dev src/index.ts"
   }
 }
